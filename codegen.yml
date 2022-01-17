@@ -1,0 +1,22 @@
+overwrite: true
+schema:
+  - http://localhost:8000/graphql
+  - ./src/appStorage.graphql
+documents: ["./src/**/*.{tsx, js, ts, jsx}",]
+generates:
+  src/backend/model.tsx:
+    plugins:
+      - typescript
+      - fragment-matcher
+      - typescript-operations
+      - typescript-react-apollo
+      - typescript-apollo-client-helpers
+    config:
+      skipTypename: false
+      withHooks: true
+      withMutationFn: true
+      # flattenGeneratedTypes: true
+      useExplicitTyping: true
+hooks:
+  afterAllFileWrite:
+    - eslint -c .eslintrc.json --fix

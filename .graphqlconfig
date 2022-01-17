@@ -1,0 +1,15 @@
+{
+  "name": "OpenGeo Backend Schema",
+  "schemaPath": "./src/backendSchema.graphql",
+  "extensions": {
+    "endpoints": {
+      "OpenGeo Backend Endpoint": {
+        "url": "http://localhost:8000/graphql",
+        "headers": {
+          "user-agent": "JS GraphQL"
+        },
+        "introspect": true
+      }
+    }
+  }
+}

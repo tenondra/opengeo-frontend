@@ -1,0 +1,675 @@
+# This file was generated based on ".graphqlconfig". Do not edit manually.
+
+schema {
+	query: Query
+	mutation: Mutations
+	subscription: Subscription
+}
+
+type CurrentGame {
+	lobbyGame: LobbyGame
+	location: Location
+	roundNumber: Int
+}
+
+type DeleteJSONWebTokenCookie {
+	deleted: Boolean!
+}
+
+type ErrorType {
+	field: String!
+	messages: [String!]!
+}
+
+"A single result for a location"
+type FinalResult {
+	distance: Int
+	guess: Guess
+	score: Int
+}
+
+"List of results for a player"
+type FinalResults {
+	lobbyPlayer: LobbyPlayer
+	locations: [Location]
+	results: [FinalResult]
+	totalScore: Int
+}
+
+"Type definition for one game"
+type Game {
+	"creator"
+	creator: Player
+	gameLobbies: [LobbyGame!]
+	"Django object unique identification field"
+	id: ID!
+	"name"
+	name: String
+	rounds: Int
+	"time limit"
+	timeLimit: Int
+}
+
+"SerializerMutation for GameModel model"
+type GameSerializerMutation {
+	"Errors list for the field"
+	errors: [ErrorType]
+	gamemodel: Game
+	"Boolean field that return mutation result request."
+	ok: Boolean
+}
+
+"SerializerMutation for GameModel model"
+type GameUpdateSerializerMutation {
+	"Errors list for the field"
+	errors: [ErrorType]
+	gamemodel: Game
+	"Boolean field that return mutation result request."
+	ok: Boolean
+}
+
+"Type definition for one guess"
+type Guess {
+	"guess end"
+	guessEnd: CustomDateTime
+	"guess start"
+	guessStart: CustomDateTime
+	"Django object unique identification field"
+	id: ID!
+	"latitude"
+	latitude: Float
+	"lobby game"
+	lobbyGame: LobbyGame
+	"location"
+	location: Location
+	"longitude"
+	longitude: Float
+	"player"
+	player: LobbyPlayer
+}
+
+"SerializerMutation for GuessModel model"
+type GuessCreateSerializerMutation {
+	"Errors list for the field"
+	errors: [ErrorType]
+	guessmodel: Guess
+	"Boolean field that return mutation result request."
+	ok: Boolean
+}
+
+"SerializerMutation for GuessModel model"
+type GuessUpdateSerializerMutation {
+	"Errors list for the field"
+	errors: [ErrorType]
+	guessmodel: Guess
+	"Boolean field that return mutation result request."
+	ok: Boolean
+}
+
+"Type definition for one lobby"
+type Lobby {
+	"created"
+	created: CustomDateTime
+	id: Int
+	"lobby game"
+	lobbyGame: LobbyGame
+	"LobbyPlayerModel list"
+	lobbyPlayers(
+		"Django object unique identification field"
+		id: ID,
+		lobby: ID,
+		player: ID,
+		state: String
+	): [LobbyPlayer]
+	"name"
+	name: String
+	owner: Player
+	"state"
+	state: LobbyModelStateEnum
+}
+
+"Type definition for lobby game relation"
+type LobbyGame {
+	game: Game
+	"Django object unique identification field"
+	id: ID!
+	"LobbyModel list"
+	lobbies(
+		created_Gt: DateTime,
+		"Django object unique identification field"
+		id: ID,
+		state: String
+	): [Lobby]
+}
+
+"SerializerMutation for LobbyGameModel model"
+type LobbyGameSerializerMutation {
+	"Errors list for the field"
+	errors: [ErrorType]
+	lobbygamemodel: LobbyGame
+	"Boolean field that return mutation result request."
+	ok: Boolean
+}
+
+"SerializerMutation for LobbyGameModel model"
+type LobbyGameUpdateSerializerMutation {
+	"Errors list for the field"
+	errors: [ErrorType]
+	lobbygamemodel: LobbyGame
+	"Boolean field that return mutation result request."
+	ok: Boolean
+}
+
+"Type definition for lobby players relation"
+type LobbyPlayer {
+	guesses: [Guess!]
+	id: Int
+	"lobby"
+	lobby: Lobby
+	"player"
+	player: Player
+	"state"
+	state: LobbyPlayerModelStateEnum
+}
+
+"SerializerMutation for LobbyPlayerModel model"
+type LobbyPlayerSerializerMutation {
+	"Errors list for the field"
+	errors: [ErrorType]
+	lobbyplayermodel: LobbyPlayer
+	"Boolean field that return mutation result request."
+	ok: Boolean
+}
+
+type LobbyPlayerUpdateSubscription {
+	lobby: Lobby
+	playerId: String
+	state: PlayerState
+}
+
+"SerializerMutation for LobbyModel model"
+type LobbySerializerMutation {
+	"Errors list for the field"
+	errors: [ErrorType]
+	lobbyPlayers: LobbyPlayer
+	lobbymodel: Lobby
+	"Boolean field that return mutation result request."
+	ok: Boolean
+}
+
+type LobbyUpdateSubscription {
+	lobbyGame: LobbyGame
+	lobbyId: String
+	lobbyPlayers: [LobbyPlayer!]
+	name: String
+	owner: Player
+	state: StateChoices
+}
+
+"Type definition for one location"
+type Location {
+	"game"
+	game: Game
+	guesses: [Guess!]
+	"Django object unique identification field"
+	id: ID!
+	"latitude"
+	latitude: Float
+	"longitude"
+	longitude: Float
+}
+
+"SerializerMutation for LocationModel model"
+type LocationSerializerMutation {
+	"Errors list for the field"
+	errors: [ErrorType]
+	locationmodel: Location
+	"Boolean field that return mutation result request."
+	ok: Boolean
+}
+
+"Creation of multiple locations"
+type MultipleLocationSerializerMutation {
+	locations: [Location]
+}
+
+type Mutations {
+	"Creation of multiple locations"
+	batchLocationCreate(locations: [LocationInput]): MultipleLocationSerializerMutation
+	deleteTokenCookie: DeleteJSONWebTokenCookie
+	gameCreate(newGamemodel: GameModelCreateGenericType!): GameSerializerMutation
+	gameDelete(
+		"Django object unique identification field"
+		id: ID!
+	): GameSerializerMutation
+	gameUpdate(newGamemodel: GameModelUpdateGenericType!): GameUpdateSerializerMutation
+	guessCreate(newGuessmodel: GuessModelCreateGenericType!): GuessCreateSerializerMutation
+	guessUpdate(newGuessmodel: GuessModelUpdateGenericType!): GuessUpdateSerializerMutation
+	lobbyCreate(newLobbymodel: LobbyModelCreateGenericType!): LobbySerializerMutation
+	lobbyDelete(
+		"Django object unique identification field"
+		id: ID!
+	): LobbySerializerMutation
+	lobbyGameCreate(newLobbygamemodel: LobbyGameModelCreateGenericType!): LobbyGameSerializerMutation
+	lobbyGameDelete(
+		"Django object unique identification field"
+		id: ID!
+	): LobbyGameSerializerMutation
+	lobbyGameUpdate(newLobbygamemodel: LobbyGameModelUpdateGenericType!): LobbyGameUpdateSerializerMutation
+	lobbyPlayerCreate(newLobbyplayermodel: LobbyPlayerModelCreateGenericType!): LobbyPlayerSerializerMutation
+	lobbyPlayerDelete(
+		"Django object unique identification field"
+		id: ID!
+	): LobbyPlayerSerializerMutation
+	lobbyPlayerUpdate(newLobbyplayermodel: LobbyPlayerModelUpdateGenericType!): LobbyPlayerSerializerMutation
+	lobbyUpdate(newLobbymodel: LobbyModelUpdateGenericType!): LobbySerializerMutation
+	locationCreate(newLocationmodel: LocationModelCreateGenericType!): LocationSerializerMutation
+	playerDelete(
+		"Django object unique identification field"
+		id: ID!
+	): PlayerSerializerMutation
+	playerUpdate(newPlayermodel: PlayerModelUpdateGenericType!): PlayerSerializerMutation
+	refreshToken(token: String): Refresh
+	"Registration of a player"
+	registerPlayer(name: String, password: String): PlayerRegisterMutation
+	"Obtain JSON Web Token mutation"
+	tokenAuth(id: String!, password: String!): ObtainJSONWebToken
+	verifyToken(token: String): Verify
+}
+
+"Obtain JSON Web Token mutation"
+type ObtainJSONWebToken {
+	payload: GenericScalar!
+	refreshExpiresIn: Int!
+	token: String!
+}
+
+"Type definition for one player"
+type Player {
+	createdGames: [Game!]
+	"Django object unique identification field"
+	id: ID!
+	"last login"
+	lastLogin: CustomDateTime
+	lobbyPlayer: LobbyPlayer
+	"name"
+	name: String
+	"LobbyModel list"
+	ownedLobbies(
+		created_Gt: DateTime,
+		"Django object unique identification field"
+		id: ID,
+		state: String
+	): [Lobby]
+}
+
+"Registration of a player"
+type PlayerRegisterMutation {
+	ok: Boolean
+	player: PlayerRegisterType
+}
+
+"Player registration type"
+type PlayerRegisterType {
+	createdGames: [Game!]
+	"Django object unique identification field"
+	id: ID!
+	"last login"
+	lastLogin: CustomDateTime
+	lobbyPlayer: LobbyPlayer
+	"name"
+	name: String
+	"LobbyModel list"
+	ownedLobbies(
+		created_Gt: DateTime,
+		"Django object unique identification field"
+		id: ID,
+		state: String
+	): [Lobby]
+	"password"
+	password: String
+}
+
+"SerializerMutation for PlayerModel model"
+type PlayerSerializerMutation {
+	"Errors list for the field"
+	errors: [ErrorType]
+	"Boolean field that return mutation result request."
+	ok: Boolean
+	playermodel: Player
+}
+
+type Query {
+	currentGuess(locationId: ID!, playerId: ID!): Guess
+	currentLocation(lobbyId: ID!, playerId: ID!): CurrentGame
+	finalResults(lobbyId: ID!): [FinalResults]
+	lobby(
+		"Django object unique identification field"
+		id: ID!
+	): Lobby
+	lobbyGame(
+		"Django object unique identification field"
+		id: ID!
+	): LobbyGame
+	"LobbyModel list"
+	lobbyList(
+		created_Gt: DateTime,
+		"Django object unique identification field"
+		id: ID,
+		"Number of results to return per page. Default 'default_limit': 30, and 'max_limit': 100"
+		limit: Int = 30,
+		"The initial index from which to return the results. Default: 0"
+		offset: Int,
+		"A string or comma delimited string values that indicate the default ordering when obtaining lists of objects."
+		ordering: String,
+		state: String
+	): [Lobby]
+	lobbyPlayer(
+		"Django object unique identification field"
+		id: ID!
+	): LobbyPlayer
+	player(
+		"Django object unique identification field"
+		id: ID!
+	): Player
+	randomLocation(count: Int, maxDensity: Int, minDensity: Int): [RandomLocation]
+	results(lobbyGameId: ID!, locationId: ID!): Results
+}
+
+type RandomLocation {
+	latitude: Float
+	longitude: Float
+	populationDensity: Int
+}
+
+type Refresh {
+	payload: GenericScalar!
+	refreshExpiresIn: Int!
+	token: String!
+}
+
+"A single result for a player"
+type Result {
+	distance: Int
+	guess: Guess
+	lobbyPlayer: LobbyPlayer
+	score: Int
+	totalScore: Int
+}
+
+"List of results for a location"
+type Results {
+	location: Location
+	results: [Result]
+}
+
+"Definition for all subscriptions"
+type Subscription {
+	lobbyPlayerUpdate(playerId: String): LobbyPlayerUpdateSubscription
+	lobbyUpdate(lobbyId: String): LobbyUpdateSubscription
+}
+
+type Verify {
+	payload: GenericScalar!
+}
+
+"An enumeration."
+enum LobbyModelStateEnum {
+	"Closed"
+	CLOSED
+	"Open"
+	OPEN
+	"Running"
+	RUNNING
+}
+
+"An enumeration."
+enum LobbyModelStateEnumCreate {
+	"Closed"
+	CLOSED
+	"Open"
+	OPEN
+	"Running"
+	RUNNING
+}
+
+"An enumeration."
+enum LobbyModelStateEnumUpdate {
+	"Closed"
+	CLOSED
+	"Open"
+	OPEN
+	"Running"
+	RUNNING
+}
+
+"An enumeration."
+enum LobbyPlayerModelStateEnum {
+	"After Game"
+	AFTER_GAME
+	"Idle"
+	IDLE
+	"In Game"
+	IN_GAME
+	"Ready"
+	READY
+	"Searching Lobby"
+	SEARCHING_LOBBY
+	"Waiting Next Round"
+	WAITING_NEXT_ROUND
+}
+
+"An enumeration."
+enum LobbyPlayerModelStateEnumCreate {
+	"After Game"
+	AFTER_GAME
+	"Idle"
+	IDLE
+	"In Game"
+	IN_GAME
+	"Ready"
+	READY
+	"Searching Lobby"
+	SEARCHING_LOBBY
+	"Waiting Next Round"
+	WAITING_NEXT_ROUND
+}
+
+"An enumeration."
+enum LobbyPlayerModelStateEnumUpdate {
+	"After Game"
+	AFTER_GAME
+	"Idle"
+	IDLE
+	"In Game"
+	IN_GAME
+	"Ready"
+	READY
+	"Searching Lobby"
+	SEARCHING_LOBBY
+	"Waiting Next Round"
+	WAITING_NEXT_ROUND
+}
+
+"An enumeration."
+enum PlayerState {
+	AFTER_GAME
+	IDLE
+	IN_GAME
+	READY
+	SEARCHING_LOBBY
+	WAITING_NEXT_ROUND
+}
+
+"An enumeration."
+enum StateChoices {
+	CLOSED
+	OPEN
+	RUNNING
+}
+
+"Auto generated InputType for GameModel model"
+input GameModelCreateGenericType {
+	gameLobbies: [ID!]
+	locations: [ID!]
+	"name"
+	name: String
+	"time limit"
+	timeLimit: Int!
+}
+
+"Auto generated InputType for GameModel model"
+input GameModelUpdateGenericType {
+	gameLobbies: [ID!]
+	"Django object unique identification field"
+	id: ID!
+	locations: [ID!]
+	"name"
+	name: String
+	"time limit"
+	timeLimit: Int
+}
+
+"Auto generated InputType for GuessModel model"
+input GuessModelCreateGenericType {
+	"guess end"
+	guessEnd: CustomDateTime
+	"latitude"
+	latitude: Float
+	"lobby game"
+	lobbyGame: ID!
+	"location"
+	location: ID!
+	"longitude"
+	longitude: Float
+	"player"
+	player: ID!
+}
+
+"Auto generated InputType for GuessModel model"
+input GuessModelUpdateGenericType {
+	"guess end"
+	guessEnd: CustomDateTime
+	"Django object unique identification field"
+	id: ID!
+	"latitude"
+	latitude: Float
+	"lobby game"
+	lobbyGame: ID
+	"location"
+	location: ID
+	"longitude"
+	longitude: Float
+	"player"
+	player: ID
+}
+
+"Auto generated InputType for LobbyGameModel model"
+input LobbyGameModelCreateGenericType {
+	"game"
+	game: ID!
+	guesses: [ID!]
+	lobbies: [ID!]
+}
+
+"Auto generated InputType for LobbyGameModel model"
+input LobbyGameModelUpdateGenericType {
+	"game"
+	game: ID
+	guesses: [ID!]
+	"Django object unique identification field"
+	id: ID!
+	lobbies: [ID!]
+}
+
+"Auto generated InputType for LobbyModel model"
+input LobbyModelCreateGenericType {
+	"lobby game"
+	lobbyGame: ID
+	lobbyPlayers: [ID!]
+	"name"
+	name: String
+	"owner"
+	owner: ID!
+	"state"
+	state: LobbyModelStateEnumCreate
+}
+
+"Auto generated InputType for LobbyModel model"
+input LobbyModelUpdateGenericType {
+	"Django object unique identification field"
+	id: ID!
+	"lobby game"
+	lobbyGame: ID
+	lobbyPlayers: [ID!]
+	"name"
+	name: String
+	"owner"
+	owner: ID
+	"state"
+	state: LobbyModelStateEnumUpdate
+}
+
+"Auto generated InputType for LobbyPlayerModel model"
+input LobbyPlayerModelCreateGenericType {
+	guesses: [ID!]
+	"lobby"
+	lobby: ID
+	"player"
+	player: ID!
+	"state"
+	state: LobbyPlayerModelStateEnumCreate
+}
+
+"Auto generated InputType for LobbyPlayerModel model"
+input LobbyPlayerModelUpdateGenericType {
+	guesses: [ID!]
+	"lobby"
+	lobby: ID
+	"player"
+	player: ID
+	"state"
+	state: LobbyPlayerModelStateEnumUpdate
+}
+
+input LocationInput {
+	game: ID
+	latitude: Float
+	longitude: Float
+}
+
+"Auto generated InputType for LocationModel model"
+input LocationModelCreateGenericType {
+	"game"
+	game: ID!
+	guesses: [ID!]
+	"latitude"
+	latitude: Float!
+	"longitude"
+	longitude: Float!
+}
+
+"Auto generated InputType for PlayerModel model"
+input PlayerModelUpdateGenericType {
+	"Django object unique identification field"
+	id: ID!
+	"name"
+	name: String
+}
+
+
+scalar CustomDateTime
+
+"""
+The `DateTime` scalar type represents a DateTime
+value as specified by
+[iso8601](https://en.wikipedia.org/wiki/ISO_8601).
+"""
+scalar DateTime
+
+"""
+The `GenericScalar` scalar type represents a generic
+GraphQL scalar value that could be:
+String, Boolean, Int, Float, List or Object.
+"""
+scalar GenericScalar

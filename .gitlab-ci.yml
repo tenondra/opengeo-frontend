@@ -1,0 +1,71 @@
+image: node:14.17
+
+stages:
+  - test
+  - build
+
+variables:
+  PROJECT_REGISTRY: $PRIVATE_REGISTRY/$CI_PROJECT_NAMESPACE/
+  IMAGE_TAG: $PRIVATE_REGISTRY/$CI_PROJECT_NAMESPACE/opengeo-frontend
+  DOCKER_TLS_CERTDIR: "/certs"
+  FF_USE_FASTZIP: "true"
+  BUILDX_VERSION: v0.5.1
+  DOCKER_BUILDKIT: 1
+
+include:
+  - template: Code-Quality.gitlab-ci.yml
+
+code_quality:
+  tags:
+    - private
+
+eslint-check:
+  stage: test
+  cache:
+    paths:
+      - .yarn
+      - node_modules/
+  tags:
+    - private
+  before_script:
+    - yarn install --cache-folder .yarn --pure-lockfile
+  script:
+    - node_modules/eslint/bin/eslint.js -c .eslintrc.json .
+
+build:
+  image: docker:20
+  stage: build
+  cache:
+    paths:
+      - docker-cache
+  services:
+    - docker:20-dind
+  only:
+    - /^v[0-9a-z.-]+$/ # v<version> tags only, i.e. v2 v0.1.0 v1.0.0-alpha.1
+  except:
+    - branches
+    - triggers
+  tags:
+    - private
+  before_script:
+    - apk add curl
+    - mkdir -p ~/.docker/cli-plugins
+    - curl -sSLo ~/.docker/cli-plugins/docker-buildx https://github.com/docker/buildx/releases/download/$BUILDX_VERSION/buildx-$BUILDX_VERSION.${CI_RUNNER_EXECUTABLE_ARCH/\//-}
+    - chmod +x ~/.docker/cli-plugins/docker-buildx
+    - docker run --privileged --rm tonistiigi/binfmt --install all
+    - docker context create builder-ctx
+    - docker context ls
+    - docker buildx create --name gitlab-builder --use builder-ctx
+    - docker buildx inspect --bootstrap
+    - docker login -u $PRIVATE_REGISTRY_USER -p $PRIVATE_REGISTRY_PASSWORD $PRIVATE_REGISTRY
+  script:
+    - docker buildx build
+      --cache-from type=local,src=./docker-cache
+      --cache-to type=local,dest=./docker-cache,mode=max
+      --platform linux/amd64
+      -t $IMAGE_TAG:$CI_COMMIT_SHORT_SHA
+      -t $IMAGE_TAG:$CI_COMMIT_TAG
+      -t $IMAGE_TAG:latest
+      -f Dockerfile.production
+      --push
+      .

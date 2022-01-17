@@ -1,0 +1,7 @@
+extend type Query {
+  playerId: ID,
+  lobbyId: ID,
+  locationId: ID,
+  gameId: ID,
+  guessId: ID,
+}
